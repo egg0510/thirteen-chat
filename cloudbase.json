@@ -1,0 +1,17 @@
+{
+  "envId": "YOUR_ENV_ID",
+  "functions": [
+    { "name": "llm-proxy", "runtime": "Nodejs18.16", "entry": "index.js" },
+    { "name": "personas", "runtime": "Nodejs18.16", "entry": "index.js" },
+    { "name": "learning", "runtime": "Nodejs18.16", "entry": "index.js" },
+    { "name": "plugins", "runtime": "Nodejs18.16", "entry": "index.js" }
+  ],
+  "collections": [
+    { "collectionName": "personas" },
+    { "collectionName": "sessions" },
+    { "collectionName": "analytics" },
+    { "collectionName": "plugins" },
+    { "collectionName": "secrets" },
+    { "collectionName": "template_edits" }
+  ]
+}
