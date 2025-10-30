@@ -4,6 +4,8 @@ const fs = require('fs');
 const path = require('path');
 
 const app = express();
+// 信任一层反向代理，修复 X-Forwarded-For 校验错误（rate-limit 依赖 req.ip）
+app.set('trust proxy', 1);
 const { env } = require('./config.cjs');
 const { logger } = require('./logger.cjs');
 const rateLimit = require('express-rate-limit');
@@ -20,11 +22,14 @@ app.use(require('cors')({
 app.use(rateLimit({ windowMs: 60_000, max: 60 }));
 app.use(express.json({ limit: '1mb' }));
 
+// 静态托管打包产物（确保构建阶段生成 dist）
+const distDir = path.join(__dirname, '..', 'dist');
+app.use(express.static(distDir));
+
 const { randomUUID } = require('crypto');
 app.use((req,res,next)=>{ req.traceId = randomUUID(); next(); });
 
 app.get(['/healthz','/api/healthz'], (req,res)=> res.status(200).send('ok'));
-app.get('/', (req,res)=> res.status(200).send('ok'));
 
 const dataPath = path.join(__dirname, '..', 'secrets.json');
 function readSecrets(){ try { return JSON.parse(fs.readFileSync(dataPath,'utf-8')); } catch { return {}; } }
@@ -100,6 +105,11 @@ app.get('/api/llm/stream', async (req, res) => {
 const { persona } = require('./personas.cjs');
 app.get('/api/personas', (req,res) => {
   res.json([persona]);
+});
+
+// SPA 兜底：非 /api/* 的路由回到 index.html，避免前端路由刷新 404
+app.get(/^(?!\/api\/).*/, (req, res) => {
+  res.sendFile(path.join(distDir, 'index.html'));
 });
 
 const port = Number(process.env.PORT || 8787);
