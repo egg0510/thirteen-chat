@@ -135,7 +135,8 @@ body { margin:0; background:var(--bg); color:var(--text); font-family: Inter, sy
 .cal-cell .num{ font-weight:700; }
 .cal-cell .tag{ position:absolute; right:6px; top:6px; font-size:11px; background:#f5c45d; color:#111; border-radius:10px; padding:2px 6px; }
 .cal-actions{ display:flex; gap:8px; margin-top:10px; }
-.cal-actions button{ border:none; background:#f7f7f7; color:#111; padding:8px 12px; border-radius:999px; }
+.cal-actions button{ border:1px solid var(--border); background: var(--surface-1); color: var(--text); padding:8px 12px; border-radius:12px; backdrop-filter: blur(var(--glass-blur-sm)); -webkit-backdrop-filter: blur(var(--glass-blur-sm)); box-shadow: var(--glass-inner), var(--shadow-sm); transition: transform .15s ease, box-shadow .15s ease, background-color .15s ease; }
+.cal-actions button:hover{ transform: translateY(-1px); box-shadow: var(--shadow-md), var(--glass-inner); }
 
 /* 习惯列表条 */
 .greet .lead{ font-size:16px; color:#444; margin:8px 0 6px; }
@@ -155,12 +156,13 @@ body { margin:0; background:var(--bg); color:var(--text); font-family: Inter, sy
 .task-input button{ border:1px solid var(--glass-stroke); background: var(--grad-soft); color: var(--text); padding:10px 16px; border-radius:12px; box-shadow: var(--halo); backdrop-filter: blur(var(--glass-blur-md)); -webkit-backdrop-filter: blur(var(--glass-blur-md)); }
 .task-input input[type=time]{ width:120px; }
 .task-tabs{ display:flex; gap:8px; margin:8px 0; }
-.task-tabs button{ border:none; background:#f2f2f2; color:#333; padding:8px 12px; border-radius:999px; }
-.task-tabs .active{ background:#111; color:#fff; }
-.list li{ display:flex; align-items:center; gap:8px; background:#fafafa; padding:10px 12px; border-radius:12px; transition: background .2s ease, transform .2s ease; }
+.task-tabs button{ border:1px solid var(--border); background: var(--surface-2); color: var(--text); padding:8px 12px; border-radius:12px; backdrop-filter: blur(var(--glass-blur-sm)); -webkit-backdrop-filter: blur(var(--glass-blur-sm)); box-shadow: var(--glass-inner); transition: transform .15s ease, box-shadow .15s ease, background-color .15s ease; }
+.task-tabs button:hover{ transform: translateY(-1px); box-shadow: var(--shadow-sm), var(--glass-inner); }
+.task-tabs .active{ background: var(--grad-soft); border-color: var(--glass-stroke); box-shadow: var(--halo); color: var(--text); }
+.list li{ display:flex; align-items:center; gap:8px; background: var(--surface-1); padding:10px 12px; border-radius:12px; transition: background .2s ease, transform .2s ease, box-shadow .2s ease; border:1px solid var(--border); backdrop-filter: blur(var(--glass-blur-sm)); -webkit-backdrop-filter: blur(var(--glass-blur-sm)); box-shadow: var(--glass-inner), var(--shadow-sm); }
 .list li.draggable{ cursor: grab; }
-.list li.dragging{ opacity:.5; }
-.list li input[type=checkbox]{ accent-color: #111; }
+.list li.dragging{ opacity:.8; transform: scale(.996); box-shadow: var(--shadow-md), var(--glass-inner); }
+.list li input[type=checkbox]{ accent-color: var(--primary); }
 .list li.done{ opacity:.6; text-decoration: line-through; }
 .list li:not(.done):active{ transform: scale(.98); }
 .list li .remind{ margin-left:auto; font-size:12px; color:#666; }
