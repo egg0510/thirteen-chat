@@ -108,11 +108,11 @@ export default function Home(){
 
   return (
     <div className="section">
-      <div className="header">
+      <div className="header glass-card glass interactive">
         <h2>Hi, 褚钰翔</h2>
         <div className="actions">
           <div className="pill">Search...</div>
-          <div className="pill">Upgrade</div>
+          <div className="pill upgrade">Upgrade</div>
         </div>
       </div>
       <div className="grid cols-2">

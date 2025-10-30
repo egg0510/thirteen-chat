@@ -56,11 +56,23 @@
 body { margin:0; background:var(--bg); color:var(--text); font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, PingFang SC, Microsoft YaHei, sans-serif; }
 .app { min-height:100vh; padding: 24px 24px 80px; }
 
+/* Utility: glass / halo / interactive */
+.glass { background: var(--surface-1); border:1px solid var(--border); backdrop-filter: blur(var(--glass-blur-sm)); -webkit-backdrop-filter: blur(var(--glass-blur-sm)); box-shadow: var(--glass-inner), var(--shadow-sm); border-radius: var(--radius-lg); }
+.glass-strong { background: var(--grad-soft); border:1px solid var(--glass-stroke); backdrop-filter: blur(var(--glass-blur-md)); -webkit-backdrop-filter: blur(var(--glass-blur-md)); box-shadow: var(--halo); border-radius: var(--radius-lg); }
+.halo { position: relative; }
+.halo::after { content:""; position:absolute; inset:-1px; border-radius:inherit; pointer-events:none; box-shadow: var(--halo); }
+.interactive { transition: transform var(--dur,200ms) var(--easing,cubic-bezier(.2,.6,.2,1)), box-shadow var(--dur,200ms) var(--easing,cubic-bezier(.2,.6,.2,1)), background-color var(--dur,200ms) var(--easing,cubic-bezier(.2,.6,.2,1)), border-color var(--dur,200ms) var(--easing,cubic-bezier(.2,.6,.2,1)); will-change: transform, box-shadow; }
+.interactive:hover { transform: translateY(-1px); box-shadow: var(--shadow-md), var(--glass-inner); }
+
 /* 顶部欢迎区与搜索/升级按钮占位 */
 .header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
 .header h2 { font-weight:700; letter-spacing:.2px; }
 .header .actions { display:flex; gap:12px; }
-.header .pill { background:#fff; border-radius:999px; padding:8px 14px; box-shadow:var(--shadow); }
+.header .pill { border-radius:999px; padding:8px 14px; }
+/* 首页欢迎区升级为玻璃卡 */
+.header.glass-card { padding:12px 16px; border-radius:20px; }
+.header.glass-card .pill { background: var(--surface-1); border:1px solid var(--border); backdrop-filter: blur(var(--glass-blur-sm)); -webkit-backdrop-filter: blur(var(--glass-blur-sm)); box-shadow: var(--glass-inner), var(--shadow-sm); }
+.header.glass-card .pill.upgrade { background: var(--grad-soft); border:1px solid var(--glass-stroke); box-shadow: var(--halo); }
 
 .bottom-nav { position:fixed; left:0; right:0; bottom:0; height:64px; background: var(--surface-1); backdrop-filter: blur(var(--glass-blur-sm)); -webkit-backdrop-filter: blur(var(--glass-blur-sm)); display:grid; grid-template-columns: repeat(5,1fr); border-top: 1px solid var(--border); box-shadow: var(--glass-inner); }
 .bottom-nav a { display:flex; align-items:center; justify-content:center; color:#333; text-decoration:none; }
