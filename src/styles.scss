@@ -146,6 +146,22 @@ body { margin:0; background:var(--bg); color:var(--text); font-family: Inter, sy
 .form .actions .primary{ border:none; background:#111; color:#fff; padding:10px 16px; border-radius:999px; }
 
 /* 聊天样式（统一到主题 Token） */
+/* 全屏聊天布局：自适配移动/桌面 */
+.section.chat.chat-full { padding: 0; }
+.section.chat.chat-full .chat-card { height: 100dvh; display: grid; grid-template-rows: auto 1fr auto; border-radius: 0; }
+@media (min-width: 768px){
+  .section.chat.chat-full .chat-card { max-width: 960px; margin: 0 auto; border-radius: 24px; height: calc(100dvh - 24px); }
+}
+/* 让消息区在网格中可滚动 */
+.section.chat.chat-full .chat-messages { min-height: 0; }
+/* 输入区安全区适配 */
+.section.chat.chat-full .chat-input { position: static; padding-bottom: calc(12px + env(safe-area-inset-bottom)); }
+.section.chat.chat-full .chat-input input { font-size: 15px; }
+@media (max-width: 480px){
+  .section.chat.chat-full .chat-header { padding:12px; }
+  .section.chat.chat-full .chat-messages { padding:12px; }
+  .section.chat.chat-full .chat-input { padding:10px 12px; }
+}
 .chat { display:grid; gap:16px; }
 .chat .chat-card { padding:0; overflow:hidden; background: var(--card-bg); border-radius: 24px; box-shadow: var(--shadow); }
 .chat-header { padding:16px 18px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); background: var(--card-bg); }
@@ -153,7 +169,7 @@ body { margin:0; background:var(--bg); color:var(--text); font-family: Inter, sy
 .avatar { width:34px; height:34px; border-radius:50%; background:var(--primary); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; box-shadow:var(--shadow-sm); }
 .avatar.sm { width:32px; height:32px; }
 
-.chat-messages { padding:16px; display:flex; flex-direction:column; gap:12px; max-height:60vh; overflow:auto; scroll-behavior:smooth; scroll-padding-bottom: 80px; }
+.chat-messages { padding:16px; display:flex; flex-direction:column; gap:12px; overflow:auto; min-height:0; scroll-behavior:smooth; scroll-padding-bottom: 80px; }
 .msg { display:flex; align-items:flex-end; gap:10px; }
 .msg.assistant { flex-direction: row; }
 .msg.user { flex-direction: row-reverse; }

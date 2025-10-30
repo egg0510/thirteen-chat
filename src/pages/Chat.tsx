@@ -54,7 +54,7 @@ export default function Chat(){
   }, []);
 
   return (
-    <div className="section chat">
+    <div className="section chat chat-full">
       <div className="card chat-card">
         <div className="chat-header">
           <div className="persona">
