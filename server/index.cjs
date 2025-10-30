@@ -23,7 +23,8 @@ app.use(express.json({ limit: '1mb' }));
 const { randomUUID } = require('crypto');
 app.use((req,res,next)=>{ req.traceId = randomUUID(); next(); });
 
-app.get('/healthz', (req,res)=> res.status(200).send('ok'));
+app.get(['/healthz','/api/healthz'], (req,res)=> res.status(200).send('ok'));
+app.get('/', (req,res)=> res.status(200).send('ok'));
 
 const dataPath = path.join(__dirname, '..', 'secrets.json');
 function readSecrets(){ try { return JSON.parse(fs.readFileSync(dataPath,'utf-8')); } catch { return {}; } }
@@ -101,5 +102,5 @@ app.get('/api/personas', (req,res) => {
   res.json([persona]);
 });
 
-const port = 8787;
-app.listen(port, () => console.log(`API server listening on http://localhost:${port}`));
+const port = Number(process.env.PORT || 8787);
+app.listen(port, '0.0.0.0', () => console.log(`API server listening on http://0.0.0.0:${port}`));

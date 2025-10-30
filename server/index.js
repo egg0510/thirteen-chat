@@ -4,8 +4,17 @@ const fs = require('fs');
 const path = require('path');
 
 const app = express();
+// 信任一层反向代理（Zeabur/云平台前通常有一层）
+app.set('trust proxy', 1);
 app.use(cors());
 app.use(express.json());
+
+// 静态托管打包产物（需要在构建阶段生成 dist）
+const distDir = path.join(__dirname, '..', 'dist');
+app.use(express.static(distDir));
+
+// 健康检查
+app.get(['/healthz','/api/healthz'], (req,res)=> res.status(200).send('ok'));
 
 const dataPath = path.join(__dirname, '..', 'secrets.json');
 function readSecrets(){ try { return JSON.parse(fs.readFileSync(dataPath,'utf-8')); } catch { return {}; } }
@@ -81,5 +90,10 @@ app.get('/api/personas', (req,res) => {
   res.json([persona]);
 });
 
-const port = 8787;
-app.listen(port, () => console.log(`API server listening on http://localhost:${port}`));
+// SPA 兜底：非 /api/* 的路由回到 index.html，避免前端路由 404
+app.get(/^(?!\/api\/).*/, (req, res) => {
+  res.sendFile(path.join(distDir, 'index.html'));
+});
+
+const port = Number(process.env.PORT || 8787);
+app.listen(port, '0.0.0.0', () => console.log(`API server listening on http://0.0.0.0:${port}`));

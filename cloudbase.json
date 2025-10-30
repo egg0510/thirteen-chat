@@ -1,5 +1,5 @@
 {
-  "envId": "YOUR_ENV_ID",
+  "envId": "egg-1gref12ic79f5efc",
   "functions": [
     { "name": "llm-proxy", "runtime": "Nodejs18.16", "entry": "index.js" },
     { "name": "personas", "runtime": "Nodejs18.16", "entry": "index.js" },
