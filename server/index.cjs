@@ -10,13 +10,16 @@ const { env } = require('./config.cjs');
 const { logger } = require('./logger.cjs');
 const rateLimit = require('express-rate-limit');
 
-const origins = env.CORS_ORIGINS.split(',').map(s=>s.trim()).filter(Boolean);
+const allowAll = (env.CORS_ORIGINS || '*').trim() === '*';
+const origins = (env.CORS_ORIGINS || '').split(',').map(s=>s.trim()).filter(Boolean);
 app.use(require('cors')({
   origin(origin, cb){
-    if(!origin || origins.includes(origin)) return cb(null, true);
+    if (!origin) return cb(null, true); // 非浏览器/同源简单请求
+    if (allowAll) return cb(null, true);
+    if (origins.includes(origin)) return cb(null, true);
     return cb(new Error('Not allowed by CORS'));
   },
-  credentials: true
+  credentials: allowAll ? false : true
 }));
 
 app.use(rateLimit({ windowMs: 60_000, max: 60 }));
