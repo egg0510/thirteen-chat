@@ -3,7 +3,6 @@ import Bubble from '../components/Bubble';
 const CalendarCard = lazy(() => import('../components/CalendarCard'));
 const GreetingCard = lazy(() => import('../components/GreetingCard'));
 const TasksPanel = lazy(() => import('../components/TasksPanel'));
-import MultiModalInput from '../components/MultiModalInput';
 import ActivityLogPanel from '../components/ActivityLogPanel';
 import QuickActionsGrid from '../components/QuickActionsGrid';
 import { initActivityLogger, logEvent } from '../utils/activityLogger';
