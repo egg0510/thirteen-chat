@@ -20,6 +20,17 @@
   --bubble-assistant:#FFFFFF;
   --code-bg:#F3F4F6;
   --placeholder:#9AA0A6;
+
+  /* Glass tokens */
+  --surface-1: rgba(255,255,255,0.65);
+  --surface-2: rgba(255,255,255,0.40);
+  --glass-blur-sm: 8px; --glass-blur-md: 16px; --glass-blur-lg: 24px;
+  --glass-stroke: rgba(255,255,255,0.45);
+  --glass-shadow: 0 8px 24px rgba(15,17,19,.12);
+  --glass-inner: inset 0 1px 0 rgba(255,255,255,.35);
+  --halo: 0 0 0 1px rgba(255,255,255,0.25), 0 10px 30px rgba(0,0,0,0.08);
+  --grad-soft: linear-gradient(180deg, rgba(255,255,255,0.88), rgba(248,248,250,0.66));
+  --grad-inverse: linear-gradient(180deg, rgba(0,0,0,0.12), rgba(0,0,0,0.04));
 }
 
 /* Dark mode tokens */
@@ -29,6 +40,16 @@
     --bubble-user:#1E2228; --bubble-assistant:#1C1F24;
     --code-bg:#111821; --placeholder:#7B8391;
     --shadow: none; --shadow-sm:none; --shadow-md:none;
+
+    /* Glass tokens (dark) */
+    --surface-1: rgba(22,24,27,0.65);
+    --surface-2: rgba(18,20,23,0.45);
+    --glass-stroke: rgba(255,255,255,0.10);
+    --glass-shadow: 0 12px 30px rgba(0,0,0,0.35);
+    --glass-inner: inset 0 1px 0 rgba(255,255,255,.06);
+    --halo: 0 0 0 1px rgba(255,255,255,0.06), 0 8px 22px rgba(0,0,0,0.45);
+    --grad-soft: linear-gradient(180deg, rgba(34,36,40,0.65), rgba(18,20,23,0.55));
+    --grad-inverse: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
   }
 }
 
@@ -41,12 +62,12 @@ body { margin:0; background:var(--bg); color:var(--text); font-family: Inter, sy
 .header .actions { display:flex; gap:12px; }
 .header .pill { background:#fff; border-radius:999px; padding:8px 14px; box-shadow:var(--shadow); }
 
-.bottom-nav { position:fixed; left:0; right:0; bottom:0; height:64px; background:#ffffffcc; backdrop-filter: blur(10px); display:grid; grid-template-columns: repeat(5,1fr); border-top: 1px solid #e8e8e8; }
+.bottom-nav { position:fixed; left:0; right:0; bottom:0; height:64px; background: var(--surface-1); backdrop-filter: blur(var(--glass-blur-sm)); -webkit-backdrop-filter: blur(var(--glass-blur-sm)); display:grid; grid-template-columns: repeat(5,1fr); border-top: 1px solid var(--border); box-shadow: var(--glass-inner); }
 .bottom-nav a { display:flex; align-items:center; justify-content:center; color:#333; text-decoration:none; }
 .bottom-nav a.active { color:#111; font-weight:700; }
 
 .section { padding: 8px; }
-.card { background: var(--card); border-radius: 24px; box-shadow: var(--shadow); padding: 18px; transition: transform .3s ease, box-shadow .3s ease; }
+.card { background: var(--grad-soft); border: 1px solid var(--glass-stroke); border-radius: 24px; box-shadow: var(--halo); padding: 18px; transition: transform .3s ease, box-shadow .3s ease; backdrop-filter: blur(var(--glass-blur-md)); -webkit-backdrop-filter: blur(var(--glass-blur-md)); }
 .card:hover{ transform: translateY(-2px) scale(1.005); box-shadow: 0 16px 40px rgba(0,0,0,.12); }
 .card.tilt{ perspective: 800px; transform-style: preserve-3d; }
 .card.tilt{ transform: rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)); }
@@ -118,8 +139,8 @@ body { margin:0; background:var(--bg); color:var(--text); font-family: Inter, sy
 .plugin-card .temperature{ font-size:40px; font-weight:800; }
 .list{ list-style:none; padding:0; margin:8px 0 0; display:grid; gap:8px; }
 .task-input{ display:flex; gap:8px; margin:10px 0; }
-.task-input input{ flex:1; border:none; outline:none; padding:10px 12px; border-radius:999px; background:#fafafa; }
-.task-input button{ border:none; background:#111; color:#fff; padding:10px 16px; border-radius:999px; }
+.task-input input{ flex:1; border:1px solid var(--border); outline:none; padding:10px 12px; border-radius:12px; background: var(--surface-1); color: var(--text); backdrop-filter: blur(var(--glass-blur-sm)); -webkit-backdrop-filter: blur(var(--glass-blur-sm)); box-shadow: var(--glass-inner), var(--shadow-sm); }
+.task-input button{ border:1px solid var(--glass-stroke); background: var(--grad-soft); color: var(--text); padding:10px 16px; border-radius:12px; box-shadow: var(--halo); backdrop-filter: blur(var(--glass-blur-md)); -webkit-backdrop-filter: blur(var(--glass-blur-md)); }
 .task-input input[type=time]{ width:120px; }
 .task-tabs{ display:flex; gap:8px; margin:8px 0; }
 .task-tabs button{ border:none; background:#f2f2f2; color:#333; padding:8px 12px; border-radius:999px; }
@@ -139,12 +160,12 @@ body { margin:0; background:var(--bg); color:var(--text); font-family: Inter, sy
 .timeline{ position:relative; padding:16px; display:grid; gap:14px; }
 .timeline .line{ position:absolute; left:20px; top:0; bottom:0; width:2px; background:#e5e5e5; }
 .timeline .node{ display:flex; gap:12px; align-items:flex-start; }
-.timeline .dot{ width:10px; height:10px; border-radius:50%; background:#111; margin-left:16px; margin-top:6px; }
+.timeline .dot{ width:10px; height:10px; border-radius:50%; background: var(--grad-inverse); border:1px solid var(--border); box-shadow: var(--halo); margin-left:16px; margin-top:6px; }
 
 /* 表单 */
 .form .fields{ display:grid; gap:10px; }
-.form input, .form select{ border:none; outline:none; padding:12px 14px; border-radius:12px; background:#fafafa; }
-.form .actions .primary{ border:none; background:#111; color:#fff; padding:10px 16px; border-radius:999px; }
+.form input, .form select{ border:1px solid var(--border); outline:none; padding:12px 14px; border-radius:12px; background: var(--surface-1); color: var(--text); backdrop-filter: blur(var(--glass-blur-sm)); -webkit-backdrop-filter: blur(var(--glass-blur-sm)); box-shadow: var(--glass-inner), var(--shadow-sm); }
+.form .actions .primary{ border:1px solid var(--glass-stroke); background: var(--grad-soft); color: var(--text); padding:10px 16px; border-radius:12px; box-shadow: var(--halo); backdrop-filter: blur(var(--glass-blur-md)); -webkit-backdrop-filter: blur(var(--glass-blur-md)); }
 
 /* 聊天样式（统一到主题 Token） */
 .chat { display:grid; gap:16px; }
@@ -194,7 +215,7 @@ body { margin:0; background:var(--bg); color:var(--text); font-family: Inter, sy
   .bubble { max-width: min(820px, 60vw); }
 }
 .chat .chat-card { padding:0; overflow:hidden; background: var(--card-bg); border-radius: 24px; box-shadow: var(--shadow); }
-.chat-header { padding:16px 18px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); background: var(--card-bg); }
+.chat-header { padding:16px 18px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); background: var(--grad-soft); backdrop-filter: blur(var(--glass-blur-md)); -webkit-backdrop-filter: blur(var(--glass-blur-md)); box-shadow: var(--halo); }
 .chat-header .persona{ display:flex; align-items:center; gap:10px; }
 .avatar { width:34px; height:34px; border-radius:50%; background:var(--primary); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; box-shadow:var(--shadow-sm); }
 .avatar.sm { width:32px; height:32px; }
@@ -204,8 +225,8 @@ body { margin:0; background:var(--bg); color:var(--text); font-family: Inter, sy
 .msg.assistant { flex-direction: row; }
 .msg.user { flex-direction: row-reverse; }
 
-.bubble { position:relative; max-width:68%; padding:12px 14px; border-radius: var(--radius-md); box-shadow: var(--shadow-sm); background: var(--bubble-assistant); border:1px solid var(--border); transition: transform .2s ease, box-shadow .2s ease, background-color .2s ease; }
-.bubble.user { margin-left:auto; background: var(--bubble-user); }
+.bubble { position:relative; max-width:68%; padding:12px 14px; border-radius: var(--radius-md); box-shadow: var(--shadow-sm), var(--glass-inner); background: color-mix(in oklab, var(--bubble-assistant) 70%, transparent); border:1px solid var(--border); transition: transform .2s ease, box-shadow .2s ease, background-color .2s ease; backdrop-filter: blur(var(--glass-blur-sm)); -webkit-backdrop-filter: blur(var(--glass-blur-sm)); }
+.bubble.user { margin-left:auto; background: color-mix(in oklab, var(--bubble-user) 75%, transparent); }
 .bubble:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
 .bubble.user::after, .bubble.assistant::after { content:''; position:absolute; bottom:2px; width:12px; height:12px; background:inherit; border-radius:50%; filter:blur(1px); }
 .bubble.user::after { right:-4px; }
@@ -214,13 +235,13 @@ body { margin:0; background:var(--bg); color:var(--text); font-family: Inter, sy
 .bubble .content pre { background: var(--code-bg); padding:10px; border-radius:8px; overflow:auto; }
 .meta { font-size:11px; color:var(--muted); margin-top:4px; }
 
-.chat-input { position:sticky; bottom:0; display:flex; gap:8px; padding:12px; background: var(--card-bg); border-top:1px solid var(--border); }
+.chat-input { position:sticky; bottom:0; display:flex; gap:8px; padding:12px; background: var(--surface-1); backdrop-filter: blur(var(--glass-blur-sm)); -webkit-backdrop-filter: blur(var(--glass-blur-sm)); border-top:1px solid var(--border); box-shadow: var(--glass-inner), var(--shadow-sm); }
 .chat-input input, .chat-input textarea { flex:1; width:100%; border:1px solid var(--border); outline:none; background: var(--card-bg); color: var(--text); padding:12px 14px; border-radius:16px; box-shadow: var(--shadow-sm); transition: box-shadow .15s ease, border-color .15s ease; }
 .chat-input textarea { resize: none; min-height: 42px; max-height: 200px; line-height: 1.6; }
 .chat-input input:focus, .chat-input textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(23,23,23,.12); }
 .chat-input input::placeholder, .chat-input textarea::placeholder { color: var(--placeholder); }
-.chat-input button { border:none; background: var(--primary); color:#fff; padding:12px 18px; border-radius:999px; box-shadow: var(--shadow-sm); cursor:pointer; transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease; }
-.chat-input button:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+.chat-input button { border:1px solid var(--glass-stroke); background: var(--grad-soft); color: var(--text); padding:12px 18px; border-radius:14px; box-shadow: var(--halo); cursor:pointer; transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease, background-color .15s ease; backdrop-filter: blur(var(--glass-blur-md)); -webkit-backdrop-filter: blur(var(--glass-blur-md)); }
+.chat-input button:hover { transform: translateY(-1px); box-shadow: var(--elev-md), var(--glass-inner); }
 .chat-input button:disabled { opacity:.6; cursor:not-allowed; }
 
 .vadbar { height:6px; border-radius:999px; background: var(--border); overflow:hidden; }
