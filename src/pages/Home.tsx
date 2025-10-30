@@ -6,7 +6,6 @@ const TasksPanel = lazy(() => import('../components/TasksPanel'));
 import ActivityLogPanel from '../components/ActivityLogPanel';
 import QuickActionsGrid from '../components/QuickActionsGrid';
 import { initActivityLogger, logEvent } from '../utils/activityLogger';
-import MessagesList from '../components/MessagesList';
 
 export default function Home(){
   const [now, setNow] = useState(new Date());
@@ -124,8 +123,6 @@ export default function Home(){
           <GreetingCard name="褚钰翔" timeStr={timeStr} weatherStr={weatherStr} phase={phase} />
         </Suspense>
         {/* <MultiModalInput onSubmit={handleSubmit} /> */}
-        {/* 消息预览列表 */}
-        <MessagesList messages={messages} />
         <div className="card tilt" onMouseMove={(e)=>{          const el = e.currentTarget as HTMLElement | null;
           if (!el) return;
           const rect = el.getBoundingClientRect?.();

@@ -160,11 +160,3 @@ body { margin:0; background:var(--bg); color:var(--text); font-family: Inter, sy
 .qa-card .icon { width:28px; height:28px; display:flex; align-items:center; justify-content:center; font-size:18px; }
 .qa-card .title { font-weight:600; }
 
-/* Messages List */
-.msgs-list .msgs { list-style:none; padding:0; margin:10px 0 0; display:grid; gap:8px; }
-.msgs-list .msgs li { background:#fafafa; border:1px solid #eee; border-radius:12px; padding:8px 10px; }
-.msgs-list .msgs li.user { border-color:#ffd9b3; }
-.msgs-list .msgs li.system { border-color:#e3e3e3; }
-.msgs-list .msgs .content { font-size:14px; }
-.msgs-list .msgs .meta { font-size:11px; color:#888; margin-top:4px; }
-
