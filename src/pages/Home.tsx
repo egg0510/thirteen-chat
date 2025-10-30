@@ -113,7 +113,7 @@ export default function Home(){
   return (
     <div className="section">
       <div className="header">
-        <h2>Hi, 林疏月</h2>
+        <h2>Hi, 褚钰翔</h2>
         <div className="actions">
           <div className="pill">Search...</div>
           <div className="pill">Upgrade</div>
@@ -122,7 +122,7 @@ export default function Home(){
       <div className="grid cols-2">
         {/* 个性化问候卡（懒加载） */}
         <Suspense fallback={<div className="card"><div className="title"><span>加载中</span><span>...</span></div></div>}>
-          <GreetingCard name="林疏月" timeStr={timeStr} weatherStr={weatherStr} phase={phase} />
+          <GreetingCard name="褚钰翔" timeStr={timeStr} weatherStr={weatherStr} phase={phase} />
         </Suspense>
         <MultiModalInput onSubmit={handleSubmit} />
         {/* 消息预览列表 */}

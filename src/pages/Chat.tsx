@@ -40,7 +40,7 @@ export default function Chat(){
           <div className="persona">
             <div className="avatar sm">十三</div>
             <div>
-              <strong>林疏月（十三）</strong>
+              <strong>褚钰翔（十三）</strong>
               <div className="meta">温柔 · 含蓄 · 偶尔毒舌｜模型 {model} {streamingId? '｜正在输入…':''}</div>
             </div>
           </div>
