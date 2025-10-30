@@ -51,7 +51,9 @@ export default function Chat(){
             <div key={m.id||i} className={`msg ${m.role}`}>
               <div className="avatar">{m.role==='assistant'?'十三':'我'}</div>
               <div>
-                <div className={`bubble ${m.role}`}>{m.content || (m.streaming ? '…' : '')}</div>
+                <div className={`bubble ${m.role}`}>
+                  <div className="content">{m.content || (m.streaming ? '…' : '')}</div>
+                </div>
                 <div className="meta">{m.time}</div>
               </div>
             </div>
