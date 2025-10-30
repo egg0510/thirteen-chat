@@ -155,15 +155,6 @@ export default function Home(){
         <Suspense fallback={<div className="card"><div className="title"><span>今日任务</span><span>加载中...</span></div></div>}>
           <TasksPanel />
         </Suspense>
-        <div className="card">
-          <div className="title"><span>My Habits</span><span>Add New +</span></div>
-          <div className="habits">
-            <div className="item"><span>Stretching</span><div className="progress"><i/></div></div>
-            <div className="item"><span>Yoga</span><div className="progress"><i/></div></div>
-            <div className="item"><span>Massage</span><div className="progress"><i/></div></div>
-            <div className="item"><span>Ab exercises</span><div className="progress"><i/></div></div>
-          </div>
-        </div>
       </div>
     </div>
   );
