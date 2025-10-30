@@ -124,7 +124,7 @@ export default function Home(){
         <Suspense fallback={<div className="card"><div className="title"><span>加载中</span><span>...</span></div></div>}>
           <GreetingCard name="褚钰翔" timeStr={timeStr} weatherStr={weatherStr} phase={phase} />
         </Suspense>
-        <MultiModalInput onSubmit={handleSubmit} />
+        {/* <MultiModalInput onSubmit={handleSubmit} /> */}
         {/* 消息预览列表 */}
         <MessagesList messages={messages} />
         <div className="card tilt" onMouseMove={(e)=>{          const el = e.currentTarget as HTMLElement | null;
