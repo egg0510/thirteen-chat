@@ -6,7 +6,7 @@ export default function Chat(){
   const { model, vad } = useApp();
   const [text,setText] = useState('');
   const [messages,setMessages] = useState<any[]>([
-    { id:'m1', role:'assistant', content:'今天心情如何？我在阳台等你喝茶。', time:'21:30' },\r
+    { id:'m1', role:'assistant', content:'今天心情如何？我在阳台等你喝茶。', time:'21:30' },
     { id:'m2', role:'user', content:'有点累，想听你拉琴。', time:'21:31' },
   ]);
   const [streamingId,setStreamingId] = useState<string|undefined>();
