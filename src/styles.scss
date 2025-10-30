@@ -186,6 +186,8 @@ body { margin:0; background:var(--bg); color:var(--text); font-family: Inter, sy
   .section.chat.chat-full .chat-header { padding:12px; }
   .section.chat.chat-full .chat-messages { padding:12px; }
   .section.chat.chat-full .chat-input { padding:10px 12px; gap:6px; }
+  .chat-input .primary { padding:10px 14px; }
+  .chat-input textarea { padding:10px 12px; }
   .bubble { max-width: 86vw; }
 }
 @media (min-width: 1024px){
@@ -213,9 +215,10 @@ body { margin:0; background:var(--bg); color:var(--text); font-family: Inter, sy
 .meta { font-size:11px; color:var(--muted); margin-top:4px; }
 
 .chat-input { position:sticky; bottom:0; display:flex; gap:8px; padding:12px; background: var(--card-bg); border-top:1px solid var(--border); }
-.chat-input input { flex:1; border:1px solid var(--border); outline:none; background: var(--card-bg); color: var(--text); padding:12px 14px; border-radius:999px; box-shadow: var(--shadow-sm); transition: box-shadow .15s ease, border-color .15s ease; }
-.chat-input input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(23,23,23,.12); }
-.chat-input input::placeholder { color: var(--placeholder); }
+.chat-input input, .chat-input textarea { flex:1; width:100%; border:1px solid var(--border); outline:none; background: var(--card-bg); color: var(--text); padding:12px 14px; border-radius:16px; box-shadow: var(--shadow-sm); transition: box-shadow .15s ease, border-color .15s ease; }
+.chat-input textarea { resize: none; min-height: 42px; max-height: 200px; line-height: 1.6; }
+.chat-input input:focus, .chat-input textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(23,23,23,.12); }
+.chat-input input::placeholder, .chat-input textarea::placeholder { color: var(--placeholder); }
 .chat-input button { border:none; background: var(--primary); color:#fff; padding:12px 18px; border-radius:999px; box-shadow: var(--shadow-sm); cursor:pointer; transition: transform .15s ease, box-shadow .15s ease, opacity .15s ease; }
 .chat-input button:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
 .chat-input button:disabled { opacity:.6; cursor:not-allowed; }

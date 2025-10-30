@@ -5,6 +5,7 @@ import { useChatStream } from '../hooks/useChatStream';
 export default function Chat(){
   const { model, vad } = useApp();
   const [text,setText] = useState('');
+  const textareaRef = useRef<HTMLTextAreaElement|null>(null);
   const inputRef = useRef<HTMLInputElement|null>(null);
   const [messages,setMessages] = useState<any[]>([]);
   const [streamingId,setStreamingId] = useState<string|undefined>();
@@ -56,6 +57,14 @@ export default function Chat(){
     update();
     return () => { vv.removeEventListener('resize', update); vv.removeEventListener('scroll', update); };
   }, []);
+
+  // 文本域自动高度
+  useEffect(()=>{
+    const ta = textareaRef.current; if(!ta) return;
+    ta.style.height = 'auto';
+    const next = Math.min(200, ta.scrollHeight);
+    ta.style.height = next + 'px';
+  }, [text]);
 
   // 监听滚动，决定是否显示“回到最新”
   useEffect(()=>{
