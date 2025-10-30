@@ -40,15 +40,22 @@ function writeSecrets(payload){ fs.writeFileSync(dataPath, JSON.stringify(payloa
 
 app.post('/api/secrets/save', (req,res) => {
   const { endpoint, key, model } = req.body || {};
-  const saved = { endpoint, key: key ? 'stored' : undefined, model };
-  writeSecrets(saved);
-  res.json({ ok:true, saved });
+  // 安全起见仅保存在服务器本地文件中，不回显 key；若未传 key 则保留旧值
+  const prev = readSecrets();
+  const toSave = { endpoint: endpoint || prev.endpoint, key: key || prev.key, model: model || prev.model };
+  writeSecrets(toSave);
+  res.json({ ok:true, saved: { endpoint: toSave.endpoint, model: toSave.model, key: !!toSave.key ? 'stored' : undefined } });
 });
 
 app.post('/api/secrets/test', async (req,res) => {
   const sec = readSecrets();
-  const ok = !!sec.endpoint && !!sec.model;
-  res.json({ ok, endpoint: sec.endpoint, model: sec.model });
+  try{
+    const { quickProbe } = require('./services/deepseek.cjs');
+    const ok = await quickProbe(sec);
+    res.json({ ok, endpoint: sec.endpoint, model: sec.model });
+  } catch(e){
+    res.status(500).json({ ok:false, error: String(e.message||e) });
+  }
 });
 
 const { runPipeline } = require('./plugins/pluginRunner.cjs');
@@ -63,42 +70,62 @@ app.post('/api/llm/chat', async (req,res) => {
   res.json({ ok:true, reply, meta: { vad: ctx.vad, params: ctx.params, map: ctx.map, results: ctx.results } });
 });
 
-// SSE 流式回复（mock），后续可替换为真实DeepSeek流
+// SSE 流式回复（DeepSeek 代理）
 app.get('/api/llm/stream', async (req, res) => {
   res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
   res.setHeader('Cache-Control', 'no-cache');
   res.setHeader('Connection', 'keep-alive');
 
   const q = req.query.q ? JSON.parse(req.query.q) : {};
-  const persona = require('./personas.cjs').persona;
-  const ctx = { messages: q.messages||[], params: q.params||{}, persona, traceId: req.traceId };
   const transport = createSSE(res);
-  // Support Last-Event-ID header for client resume
-  const lastEventId = req.headers['last-event-id'] || req.get && req.get('Last-Event-ID');
-  if (lastEventId) transport.start(lastEventId);
   try{
-    await runPipeline(ctx);
-    const preface = `${ctx.tone||'温柔口吻'}：`;
-    const weatherStr = ctx.weather?`现在${ctx.map?.location?.city||''}${ctx.weather.desc}，约${ctx.weather.temp}℃。`:'';
-    const kbStr = ctx.kbHint?` ${ctx.kbHint}`:'';
-    const body = `我听得出你有些疲惫，不如先深呼吸三次，我给你拉《起风了》。`;
-    const full = `${preface}${weatherStr}${kbStr} ${body}`;
+    const sec = readSecrets();
+    // 将前端消息直接转为 DeepSeek 兼容参数
+    const payload = { model: sec.model || 'deepseek-chat', messages: q.messages || [], temperature: 0.7 };
+    const { chatCompletionStream } = require('./services/deepseek.cjs');
+    const upstream = await chatCompletionStream(sec, payload, { timeoutMs: 120_000 });
 
-    let i = 0;
-    const step = 10;
-    const timer = setInterval(() => {
-      if (i >= full.length){
-        clearInterval(timer);
-        transport.sendMeta({ vad: ctx.vad, map: ctx.map, params: ctx.params });
-        transport.end();
-        return;
+    // 读取 DeepSeek SSE 并转发为 delta/done 事件（OpenAI 兼容格式）
+    const reader = upstream.body.getReader ? upstream.body.getReader() : null;
+    const decoder = new TextDecoder();
+
+    async function readStream(){
+      if (reader){
+        while(true){
+          const { value, done } = await reader.read();
+          if (done) break;
+          handleChunk(decoder.decode(value, { stream: true }));
+        }
+      } else {
+        for await (const chunk of upstream.body){
+          handleChunk(Buffer.isBuffer(chunk) ? chunk.toString('utf8') : String(chunk));
+        }
       }
-      const chunk = full.slice(i, i+step);
-      i += step;
-      transport.sendDelta({ content: chunk });
-    }, 80);
+      transport.sendMeta({ done: true });
+      transport.end();
+    }
 
-    req.on('close', () => { clearInterval(timer); transport.end(); });
+    function handleChunk(text){
+      const lines = text.split(/\n/);
+      for (const line of lines){
+        const l = line.trim();
+        if (!l || !l.startsWith('data:')) continue;
+        const data = l.slice(5).trim();
+        if (data === '[DONE]'){ continue; }
+        try{
+          const json = JSON.parse(data);
+          const content = json.choices?.[0]?.delta?.content || '';
+          if (content) transport.sendDelta({ content });
+        } catch(e){ /* ignore parse errors */ }
+      }
+    }
+
+    readStream().catch(err=>{
+      transport.sendError({ message: err.message||String(err) });
+      transport.end();
+    });
+
+    req.on('close', () => { transport.end(); });
   } catch(e){
     transport.sendError({ message: e.message||'stream error' });
     transport.end();

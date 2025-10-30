@@ -1,29 +1,20 @@
 function createSSE(res){
-  res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
-  res.setHeader('Cache-Control', 'no-cache');
-  res.setHeader('Connection', 'keep-alive');
-  // Safely stringify data and escape newlines to keep SSE lines intact
-  const safeJson = (obj) => {
-    try{ return JSON.stringify(obj).replace(/\n/g, '\\n'); } catch(e){ return JSON.stringify({ error: String(e) }); }
-  };
-  let eventId = 0;
-  const send = (event, data) => {
-    eventId += 1;
-    const idLine = `id: ${eventId}\n`;
-    res.write(idLine + `event: ${event}\n` + `data: ${safeJson(data)}\n\n`);
-  };
-  const ping = setInterval(()=> send('ping', {}), 15000);
-  res.flushHeaders && res.flushHeaders();
-  res.on('close', ()=> clearInterval(ping));
+  let started = false; let id = 0;
+  function start(lastId){ if (started) return; started = true; res.flushHeaders && res.flushHeaders(); }
+  function send(event, data){
+    if (!started) start();
+    id++;
+    if (event) res.write(`event: ${event}\n`);
+    res.write(`id: ${id}\n`);
+    res.write(`data: ${JSON.stringify(data)}\n\n`);
+  }
   return {
-    start(lastEventId){
-      const n = Number(lastEventId);
-      if (!Number.isNaN(n) && n >= 0) eventId = n;
-    },
-    sendDelta(d){ send('delta', d); },
-    sendMeta(m){ send('meta', m); },
-    sendError(e){ send('error', { message: e?.message || String(e) }); },
-    end(){ clearInterval(ping); send('done', {}); try{ res.end(); }catch(e){} }
+    start,
+    sendDelta(payload){ send('message', { type:'delta', ...payload }); },
+    sendMeta(meta){ send('message', { type:'done', meta }); },
+    sendError(err){ send('message', { type:'error', ...err }); },
+    end(){ try{ res.end(); } catch{ /* noop */ } }
   };
 }
+
 module.exports = { createSSE };

@@ -5,7 +5,7 @@ export function useChatStream() {
 
   const start = (payload: any, onDelta: (t:string)=>void, onDone:(meta:any)=>void, onError:(msg:string)=>void) => {
     const url = `/api/llm/stream?q=${encodeURIComponent(JSON.stringify(payload))}`;
-    const es = new EventSource(url);
+    const es = new EventSource(url, { withCredentials: false });
     esRef.current = es;
     es.onmessage = (e) => {
       try{
