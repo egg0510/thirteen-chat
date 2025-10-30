@@ -183,3 +183,13 @@ body { margin:0; background:var(--bg); color:var(--text); font-family: Inter, sy
 .msg { animation: msg-in .2s ease; }
 @keyframes msg-in { from{ opacity:0; transform: translateY(2px); } to { opacity:1; transform:none; } }
 
+/* Greet card color tweak: match black in light mode, keep contrast in dark mode */
+.card.greet .title span:first-child{ color:#000; }
+.card.greet .title span:last-child{ color:#333; }
+.greet .lead, .greet summary { color:#111; }
+
+@media (prefers-color-scheme: dark){
+  .card.greet .title span:first-child{ color: var(--text); }
+  .card.greet .title span:last-child{ color: var(--muted); }
+  .greet .lead, .greet summary { color: var(--text); }
+}
