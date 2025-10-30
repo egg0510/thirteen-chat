@@ -4,6 +4,7 @@
   --card:#fff; --card-dark:#0e0f13; --text:#2b2b2b; --muted:#8a8a8a; --primary:#171717; --accent:#f5c45d; --accent2:#ff7d6b;
   --card-bg: var(--card);
   --border:#e5e7eb;
+  --kb-offset: 0px; /* 键盘占位偏移，运行时动态设置 */
 
   /* Shape & shadow */
   --radius-sm:8px; --radius-md:12px; --radius-lg:16px;
@@ -159,6 +160,18 @@ body { margin:0; background:var(--bg); color:var(--text); font-family: Inter, sy
     max-width: 960px; margin: 0 auto; border-radius: 24px;
     height: calc(100dvh - 24px);
   }
+}
+@media (min-width: 1280px){
+  .section.chat.chat-full .chat-card { max-width: 1200px; }
+  .bubble { max-width: min(900px, 58vw); }
+}
+/* 横屏/矮屏优化（如横屏手机） */
+@media (orientation: landscape) and (max-height: 420px){
+  .section.chat.chat-full .chat-header { padding:8px 12px; }
+  .section.chat.chat-full .chat-messages { padding:8px 12px; gap:8px; }
+  .section.chat.chat-full .chat-input { padding:8px 12px; }
+  .chat-input input { padding:8px 12px; }
+  .chat-input .primary { padding:8px 12px; }
 }
 /* 解决中间滚动区溢出 */
 .section.chat.chat-full .chat-messages { min-height: 0; }

@@ -5,6 +5,7 @@ import { useChatStream } from '../hooks/useChatStream';
 export default function Chat(){
   const { model, vad } = useApp();
   const [text,setText] = useState('');
+  const inputRef = useRef<HTMLInputElement|null>(null);
   const [messages,setMessages] = useState<any[]>([]);
   const [streamingId,setStreamingId] = useState<string|undefined>();
   const [showTyping, setShowTyping] = useState(false);
@@ -39,6 +40,22 @@ export default function Chat(){
   useEffect(()=>{
     const el = listRef.current; if(!el) return; if(atBottom) el.scrollTop = el.scrollHeight;
   }, [messages, showTyping, atBottom]);
+
+  // iOS/移动端键盘适配：跟随键盘高度增加底部占位，保持消息可见
+  useEffect(()=>{
+    const vv = (window as any).visualViewport as VisualViewport | undefined;
+    if(!vv) return;
+    const update = () => {
+      const offset = Math.max(0, window.innerHeight - vv.height);
+      document.documentElement.style.setProperty('--kb-offset', offset + 'px');
+      // 保持视图在底部，避免键盘遮挡
+      const el = listRef.current; if(!el) return; el.scrollTop = el.scrollHeight;
+    };
+    vv.addEventListener('resize', update);
+    vv.addEventListener('scroll', update);
+    update();
+    return () => { vv.removeEventListener('resize', update); vv.removeEventListener('scroll', update); };
+  }, []);
 
   // 监听滚动，决定是否显示“回到最新”
   useEffect(()=>{
@@ -100,7 +117,7 @@ export default function Chat(){
           </button>
         )}
         <div className="chat-input">
-          <input value={text} onChange={(e)=>setText(e.target.value)} onKeyDown={(e)=>{ if(e.key==='Enter' && !e.shiftKey) { e.preventDefault(); send(); } }} placeholder="输入消息…（Enter 发送，Shift+Enter 换行）" />
+          <input ref={inputRef} value={text} onChange={(e)=>setText(e.target.value)} onKeyDown={(e)=>{ if(e.key==='Enter' && !e.shiftKey) { e.preventDefault(); send(); } }} onFocus={()=>{ const el=listRef.current; if(el){ setTimeout(()=>{ el.scrollTop = el.scrollHeight; }, 0); } }} onBlur={()=>{ document.documentElement.style.setProperty('--kb-offset','0px'); }} placeholder="输入消息…（Enter 发送，Shift+Enter 换行）" />
           <button onClick={send} disabled={!!streamingId || !text.trim()}>{streamingId? '回答中…':'发送'}</button>
         </div>
       </div>
