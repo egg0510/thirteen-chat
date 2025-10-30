@@ -11,6 +11,7 @@ export default function Chat(){
   ]);
   const [streamingId,setStreamingId] = useState<string|undefined>();
   const [showTyping, setShowTyping] = useState(false);
+  const [atBottom, setAtBottom] = useState(true);
   const listRef = useRef<HTMLDivElement|null>(null);
   const { start, stop } = useChatStream();
 
@@ -39,8 +40,21 @@ export default function Chat(){
 
   // 自动滚动到底部（新增消息或指示器变化时）
   useEffect(()=>{
-    const el = listRef.current; if(!el) return; el.scrollTop = el.scrollHeight;
-  }, [messages, showTyping]);
+    const el = listRef.current; if(!el) return; if(atBottom) el.scrollTop = el.scrollHeight;
+  }, [messages, showTyping, atBottom]);
+
+  // 监听滚动，决定是否显示“回到最新”
+  useEffect(()=>{
+    const el = listRef.current; if(!el) return;
+    const onScroll = () => {
+      const threshold = 24;
+      const nearBottom = el.scrollHeight - el.scrollTop - el.clientHeight <= threshold;
+      setAtBottom(nearBottom);
+    };
+    el.addEventListener('scroll', onScroll);
+    onScroll();
+    return ()=> el.removeEventListener('scroll', onScroll);
+  }, []);
 
   return (
     <div className="section chat">
@@ -56,17 +70,21 @@ export default function Chat(){
           <div style={{width:160}} className="vadbar"><i/></div>
         </div>
         <div className="chat-messages" ref={listRef}>
-          {messages.map((m:any,i)=> (
-            <div key={m.id||i} className={`msg ${m.role}`}>
-              <div className="avatar">{m.role==='assistant'?'十三':'我'}</div>
-              <div>
-                <div className={`bubble ${m.role}`}>
-                  <div className="content">{m.content || (m.streaming ? '…' : '')}</div>
+          {messages.map((m:any,i)=> {
+            const prev = messages[i-1];
+            const continued = prev && prev.role === m.role;
+            return (
+              <div key={m.id||i} className={`msg ${m.role} ${continued ? 'continued' : ''}`}>
+                {!continued && <div className="avatar">{m.role==='assistant'?'十三':'我'}</div>}
+                <div>
+                  <div className={`bubble ${m.role}`}>
+                    <div className="content">{m.content || (m.streaming ? '…' : '')}</div>
+                  </div>
+                  <div className="meta">{m.time}</div>
                 </div>
-                <div className="meta">{m.time}</div>
               </div>
-            </div>
-          ))}
+            );
+          })}
           {showTyping && (
             <div className="msg assistant">
               <div className="avatar">十三</div>
@@ -79,6 +97,11 @@ export default function Chat(){
             </div>
           )}
         </div>
+        {!atBottom && (
+          <button className="scroll-latest" onClick={()=>{ const el=listRef.current; if(el){ el.scrollTop = el.scrollHeight; } }}>
+            回到最新 ↓
+          </button>
+        )}
         <div className="chat-input">
           <input value={text} onChange={(e)=>setText(e.target.value)} onKeyDown={(e)=>{ if(e.key==='Enter' && !e.shiftKey) { e.preventDefault(); send(); } }} placeholder="输入消息…（Enter 发送，Shift+Enter 换行）" />
           <button onClick={send} disabled={!!streamingId || !text.trim()}>{streamingId? '回答中…':'发送'}</button>
