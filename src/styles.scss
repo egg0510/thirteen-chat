@@ -141,16 +141,6 @@ body { margin:0; background:var(--bg); color:var(--text); font-family: Inter, sy
 .vadbar { height:6px; border-radius:999px; background:#eee; overflow:hidden; }
 .vadbar i { display:block; height:100%; width:60%; background: linear-gradient(90deg,#ffd66b,#ff8a6b); }
 
-/* Activity Panel */
-.activity-panel { border-radius:12px; padding:12px; }
-.activity-panel .panel-header { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:8px; }
-.activity-panel .filters { display:flex; gap:6px; flex-wrap:wrap; }
-.timeline { position:relative; margin-left:10px; padding-left:16px; }
-.timeline .item { position:relative; padding:8px 0 8px 0; }
-.timeline .item .dot { position:absolute; left:-16px; top:14px; width:8px; height:8px; background:#111; border-radius:50%; }
-.timeline .item .meta .line1 { display:flex; justify-content:space-between; gap:8px; font-size:12px; color:#666; }
-.timeline .payload { margin-top:4px; background:#fafafa; border:1px solid #eee; border-radius:8px; padding:6px; max-height:120px; overflow:auto; }
-.empty { color:#999; text-align:center; padding:16px 0; }
 
 /* Quick Actions Grid */
 .qa-grid { display:grid; gap:10px; grid-template-columns: repeat(3, 1fr); }
