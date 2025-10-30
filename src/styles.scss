@@ -142,11 +142,3 @@ body { margin:0; background:var(--bg); color:var(--text); font-family: Inter, sy
 .vadbar i { display:block; height:100%; width:60%; background: linear-gradient(90deg,#ffd66b,#ff8a6b); }
 
 
-/* Quick Actions Grid */
-.qa-grid { display:grid; gap:10px; grid-template-columns: repeat(3, 1fr); }
-@media (max-width: 1024px) { .qa-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 640px) { .qa-grid { grid-template-columns: repeat(2, 1fr); } }
-.qa-card { background:#fff; border:1px solid #eee; border-radius:12px; padding:14px; text-align:left; display:flex; align-items:center; gap:10px; box-shadow:0 1px 4px rgba(0,0,0,.04); }
-.qa-card .icon { width:28px; height:28px; display:flex; align-items:center; justify-content:center; font-size:18px; }
-.qa-card .title { font-weight:600; }
-

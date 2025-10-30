@@ -3,7 +3,6 @@ import Bubble from '../components/Bubble';
 const CalendarCard = lazy(() => import('../components/CalendarCard'));
 const GreetingCard = lazy(() => import('../components/GreetingCard'));
 const TasksPanel = lazy(() => import('../components/TasksPanel'));
-import QuickActionsGrid from '../components/QuickActionsGrid';
 import { initActivityLogger, logEvent } from '../utils/activityLogger';
 
 export default function Home(){
@@ -156,13 +155,6 @@ export default function Home(){
         <Suspense fallback={<div className="card"><div className="title"><span>今日任务</span><span>加载中...</span></div></div>}>
           <TasksPanel />
         </Suspense>
-        <QuickActionsGrid cards={[
-          { key:'chat', title:'聊天', icon:'💬', to:'/chat' },
-          { key:'tasks', title:'任务', icon:'🗓️', to:'/#tasks' },
-          { key:'history', title:'历史', icon:'📜', to:'/history' },
-          { key:'plugins', title:'插件', icon:'🧩', to:'/plugins' },
-          { key:'settings', title:'设置', icon:'⚙️', to:'/settings' },
-        ]} />
         <div className="card">
           <div className="title"><span>My Habits</span><span>Add New +</span></div>
           <div className="habits">
